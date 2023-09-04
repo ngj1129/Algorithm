@@ -14,7 +14,10 @@ public class Main {
             int num = ((int) s.charAt(i) - 96) * (int) Math.pow(31, i);
             sum += num;
         }
-        System.out.println(sum);
+        if (l>5)
+            System.out.println(sum/1234567891);
+        else
+            System.out.println(sum);
 
 
         
