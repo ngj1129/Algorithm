@@ -19,10 +19,10 @@ public class Main {
             arr[i] = st.nextToken();
         }
         Arrays.sort(arr);
-        com(l, c, arr, new String[l], new boolean[c], 0, 0);
+        com(l, c, arr, new String[l], 0, 0);
     }
     
-    public static void com(int l, int c, String[] arr, String[] out, boolean[] visited, int start, int depth) {
+    public static void com(int l, int c, String[] arr, String[] out, int start, int depth) {
         if (depth == l) {
             int onevow = 0;
             int twocon = 0;
@@ -43,12 +43,8 @@ public class Main {
             return;
         }
         for (int i=start; i<c; i++) {
-            if (!visited[i]) {
-                out[depth] = arr[i];
-                visited[i] = true;
-                com(l, c, arr, out, visited, i+1, depth+1);
-                visited[i] = false;
-            }
+            out[depth] = arr[i];
+            com(l, c, arr, out, i+1, depth+1);
         }
         return;
     } 
