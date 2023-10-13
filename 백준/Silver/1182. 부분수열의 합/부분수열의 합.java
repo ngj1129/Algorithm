@@ -19,25 +19,20 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
         for (int r=1; r<=n; r++) {
-            com(n, s, r, arr, new int[r], 0, 0);
+            com(n, s, r, arr, 0, 0, 0);
         }
         System.out.println(answer);
     }
     
-    public static void com(int n, int s, int r, int[] arr, int[] out, int start, int depth) {
+    public static void com(int n, int s, int r, int[] arr, int sum, int start, int depth) {
         if (depth == r) {
-            int sum = 0;
-            for (int num: out) {
-                sum += num;
-            }
             if (sum == s) {
                 answer++;
             }
             return;
         }
-        for (int i=start; i<n; i++) {
-            out[depth] = arr[i]; //앞의 숫자를 다시 보지 않으므로(순열이 아니므로) visited가 필요없다.
-            com(n, s, r, arr, out, i+1, depth+1);
+        for (int i=start; i<n; i++) { //앞의 숫자를 다시 보지 않으므로(순열이 아니므로) visited가 필요없다.
+            com(n, s, r, arr, sum+arr[i], i+1, depth+1);
         }
         return;
     } 
