@@ -31,6 +31,7 @@ class Solution {
                 if (idx != -1 && !check) {
                     visited[i] = true;
                     dfs(words[i], target, words, visited, count+1);
+                    visited[i] = false;
                 }
             }
         }
