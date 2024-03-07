@@ -4,18 +4,17 @@ import java.util.ArrayList;
 
 class Solution {
     public int solution(int[] stones, int k) {
-        int result = 200000001;
+        int result = 0;
         int max = 0;
-        int min = 200000001;
-        //PriorityQueue<Integer> pq = new PriorityQueue<>();
-        //ArrayList<Integer> list = new ArrayList<>();
+        int min = 0;
+        //int min = 200000001;
         for (int i=0; i<stones.length; i++) {
             if (stones[i] > max) {
                 max = stones[i];
             }
-            if (stones[i] < min) {
-                min = stones[i];
-            }
+            // if (stones[i] < min) {
+            //     min = stones[i];
+            // }
         }
         int mid = 0;
         int[] arr = new int[stones.length];
@@ -38,15 +37,16 @@ class Solution {
                     zero = 0;
                 }
             }
-            // System.out.println(mid);
-            // System.out.println(Arrays.toString(arr));
             if (check) {
-                if (mid < result) {
-                    result = mid;
-                }
+                // if (mid < result) {
+                //     result = mid;
+                // }
                 max = mid-1;
             }
             else {
+                if (mid+1 > result) {
+                    result = mid+1;
+                }
                 min = mid+1;
             }
         }
