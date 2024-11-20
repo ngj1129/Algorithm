@@ -26,29 +26,25 @@ public class Main {
 			map[i] = str.split("");
 		}
 		
-		boolean[][] visited = new boolean[R][C];
 		set.add(map[0][0]);
-		visited[0][0] = true;
-		
-		dfs(0, 0, visited, 1);
+
+		dfs(0, 0, 1);
 		System.out.println(result);
 		
 	}
 	
 	
-	public static void dfs(int curX, int curY, boolean[][] visited, int d) {
+	public static void dfs(int curX, int curY, int d) {
 		for (int[] mv: move) {
 			int afterX = curX + mv[0];
 			int afterY = curY + mv[1];
 		
 			if (afterX >= 0 && afterX < R && afterY >= 0 && afterY < C) {
-				if (!set.contains(map[afterX][afterY]) && !visited[afterX][afterY]) {
+				if (!set.contains(map[afterX][afterY])) {
 //					System.out.println(map[afterX][afterY] + " " + d);
 					set.add(map[afterX][afterY]);
-					visited[afterX][afterY] = true;
-					dfs(afterX, afterY, visited, d+1);
+					dfs(afterX, afterY, d+1);
 					set.remove(map[afterX][afterY]);
-					visited[afterX][afterY] = false;
 				}
 			}
 		}
