@@ -1,86 +1,63 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
- 
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
  
 public class Main {
 	
-	public static int[] house;
+	public static int[] arr;
 	
-	public static void main(String[] args) throws IOException {
-		
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		StringTokenizer st = new StringTokenizer(br.readLine()," ");
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		
-		house = new int[N];
+		arr = new int[N];
 		
-		for(int i = 0; i < N; i++) {
-			house[i] = Integer.parseInt(br.readLine());
+		for(int i=0; i<N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
 		}
 		
-		Arrays.sort(house);	// 이분탐색을 하기 위해선 반드시 정렬 되어있어야 한다.
+		Arrays.sort(arr);	
 		
 		
-		int lo = 1;		// 최소 거리가 가질 수 있는 최솟값
-		int hi = house[N - 1] - house[0] + 1;	// 최소 거리가 가질 수 있는 최댓값
+		int lo = 1;		
+		int hi = arr[N-1] - arr[0] + 1;	//초과값 찾는 것이므로 최대거리에 +1 해준다 
 		
-		while(lo < hi) {	// Upper Bound 형식
+		//이상 ~ 미만 
+		while(lo < hi) {	
 			
 			int mid = (hi + lo) / 2;
 			
-			/*
-			 * mid 거리에 대해 설치 가능한 공유기 개수가 M 개수에 못미치면
-			 * 거리를 좁혀야 하기 때문에 hi 를 줄인다.
-			 */
-			if(canInstall(mid) < M) {
+			
+			if(check(mid) < M) {
 				hi = mid;
 			}
-			else {
-				/**
-				 * 설치 가능한 공유기 개수가 M 개수보다 크거나 같으면
-				 * 거리를 벌리면서 최소거리가 가질 수 있는 최대 거리를
-				 * 찾아낸다.
-				 */
+			
+			else { // 같으면 더 큰 거리 해본다 (오른쪽 확인) 
 				lo = mid + 1;
 			}
 		}
 		
-		/*
-		 *  Upper Bound는 탐색 값을 초과하는 첫 번째 값을 가리키므로, 
-		 *  1을 빼준 값이 조건식을 만족하는 최댓값이 된다.
-		 */
+
+		//upper bound 이므로 초과값이 나온다. 그래서 1 빼줘야 함 
 		System.out.println(lo - 1);
 	}
 	
-	// distance에 대해 설치 가능한 공유기 개수를 찾는 메소드
-	public static int canInstall(int distance) {
+	public static int check(int minD) {
 		
-		// 첫 번째 집은 무조건 설치한다고 가정
 		int count = 1;
-		int lastLocate = house[0];
+		int last = arr[0];
 		
-		for(int i = 1; i < house.length; i++) {
-			int locate = house[i];
+		for(int i=1; i <arr.length; i++) {
 			
-			/*
-			 *  현재 탐색하는 집의 위치와 직전에 설치했던 집의 위치간 거리가
-			 *  최소 거리(distance)보다 크거나 같을 때 공유기 설치 개수를 늘려주고
-			 *  마지막 설치 위치를 갱신해준다. 
-			 */
-			if(locate - lastLocate >= distance) {
+			if(arr[i] - last >= minD) {
 				count++;
-				lastLocate = locate;
+				last = arr[i];
 			}
 		}
 		return count;
 		
 	}
-	
-	
+		
 }
