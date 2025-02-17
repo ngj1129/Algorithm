@@ -1,54 +1,77 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        ArrayList<Integer> list = new ArrayList<>();
-        for (int num = 2; num <= N; num++) {
-            boolean flag = false;
-            for (int i = 2; i <= (int) Math.sqrt(num); i++) {
-                if (num % i == 0) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag) {
-                list.add(num);
-            }
-        }
-        int[] arr = new int[list.size()];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = list.get(i);
-        }
-        int answer = 0;
-        if (arr.length > 0) {
-            if (arr[arr.length-1] == N) {
-                answer++;
-            }
-            int i = 0;
-            int j = i+1;
-            int sum = arr[i];
-            while (j < arr.length && i < arr.length) {
-                if (sum == N) {
-                    answer++;
-                    sum -= arr[i];
-                    sum += arr[j];
-                    i++;
-                    j++;
-                } else if (sum < N) {
-                    sum += arr[j];
-                    j++;
-                } else {
-                    sum -= arr[i];
-                    i++;
-                }
-            }
-        }
-        System.out.println(answer);
-    }
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int N = Integer.parseInt(st.nextToken());
+		TreeSet<Integer> set = new TreeSet<Integer>();
+		
+		set.add(2);
+		
+//		for (int num=3; num<=N; num+=2) {
+//			set.add(num);
+//		}
+		
+//		for (int num=3; num<=N; num+=2) {
+//			int tmp = num;
+//			
+//			while (tmp <= N) {
+//				tmp += (2 * num);
+//				if (set.contains(tmp)) {
+//					set.remove(tmp);
+//				}
+//			}
+//		}
+		
+		for (int num=3; num<=N; num+=2) {
+			boolean check = false;
+			for (int div=3; div<=Math.sqrt(num); div+=2) {
+				if (num%div == 0) {
+					check = true;
+					break;
+				}
+			}
+			if (!check) {
+				set.add(num);
+			}
+		}
+//		System.out.println(set);
+		
+		int[] arr = new int[set.size()];
+		int ix = 0;
+		
+		for (int num: set) {
+			arr[ix] = num;
+			ix++;
+		}
+//		Arrays.sort(arr);
+		
+		int i = 0;
+		int j = 0;
+		int cur = arr[0];
+		int count = 0;
+		
+		while (i <= j) {
+			if (cur >= N) {
+				if (cur == N) {
+					count++;
+				}
+				cur -= arr[i];
+				i++;
+			}
+			else {
+				j++;
+				if (j >= arr.length) {
+					break;
+				}
+				cur += arr[j];
+			}
+		}
+		System.out.println(count);
+	}
+
 }
