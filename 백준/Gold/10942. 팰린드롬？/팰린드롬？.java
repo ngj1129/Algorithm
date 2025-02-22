@@ -2,51 +2,78 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-	static int[] num;
-	static int[][] dp;
-    
-	public static void main(String[] args) throws IOException{
+	public static int[][] dp;
+	public static int[] nums;
+	
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		
-		int n = Integer.parseInt(br.readLine());
-		num = new int[n+1];
-		dp = new int[n+1][n+1];
-		for(int i=0; i< n+1; i++) {
-			Arrays.fill(dp[i], -1);
-		}
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		for(int i=1; i<n+1; i++) {
-			num[i] = Integer.parseInt(st.nextToken());
+		
+		StringBuilder sb = new StringBuilder();
+		int n = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		dp = new int[n][n];
+		nums = new int[n];
+		
+		for (int i=0; i<n; i++) {
+			nums[i] = Integer.parseInt(st.nextToken());
+			Arrays.fill(dp[i], -1);
+			dp[i][i] = 1;
 		}
 		
-		int t = Integer.parseInt(br.readLine());
-		for(int i=0; i<t; i++) {
+//		for (int i=0; i<n-1; i++) {
+//			if (nums[i] == nums[i+1]) {
+//				dp[i][i+1] = 1;
+//			}
+//			else {
+//				dp[i][i+1] = 0;
+//			}
+//		}
+		
+//		for (int i=0; i<n-2; i++) {
+//			if (nums[i] == nums[i+2]) {
+//				dp[i][i+2] = 1;
+//			}
+//			else {
+//				dp[i][i+2] = 0;
+//			}
+//		}
+		
+//		for (int i=0; i<n; i++) {
+//			System.out.println(Arrays.toString(dp[i]));
+//		}
+		
+		st = new StringTokenizer(br.readLine());
+		int m = Integer.parseInt(st.nextToken());
+		
+		for (int i=0; i<m; i++) {
 			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int end = Integer.parseInt(st.nextToken());
-            
-			boolean flag = checkPalin(start, end) == 1? true : false;
-			if(flag) {
+			int s = Integer.parseInt(st.nextToken()) - 1;
+			int e = Integer.parseInt(st.nextToken()) - 1;
+			int check = recursion(s, e);
+			if (check == 1) {
 				sb.append("1\n");
-			}else {
+			}
+			else {
 				sb.append("0\n");
 			}
 		}
-		
 		System.out.println(sb.toString());
 	}
-
-	static int checkPalin(int s, int e) {
-		if( s >= e) return 1;
-		
-		if(dp[s][e] != -1) return dp[s][e];
-		
-		if(num[s]==num[e]) {
-			return dp[s][e] = checkPalin(s+1, e-1);
-		}
-		return 0;
 	
+	public static int recursion(int s, int e) {
+		if (s >= e) {
+			return 1;
+		}
+		
+		if (dp[s][e] >= 0) {
+			return dp[s][e];
+		}
+		
+		if (nums[s] != nums[e]) {
+			return dp[s][e] = 0;
+		}
+		
+		return dp[s][e] = recursion(s+1, e-1);
 	}
 }
