@@ -1,46 +1,32 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.*;
 
 class Solution {
     public int solution(int n, int[][] computers) {
-        int[][] node = new int[n][];
+        int answer = 0;
+        boolean[][] visited = new boolean[n][n];
         for (int i=0; i<n; i++) {
-            ArrayList<Integer> list = new ArrayList<>();
             for (int j=0; j<n; j++) {
-                if (i != j) {
-                    if (computers[i][j] == 1) {
-                        list.add(j);
-                    }
+                if (!visited[i][j] && computers[i][j] == 1) {
+                    bfs(n, i, visited, computers);
+                    answer++;
                 }
-            }
-            node[i] = new int[list.size()];
-            for (int ix=0; ix<list.size(); ix++) {
-                node[i][ix] = list.get(ix);
             }
         }
-        int count = 0;
-        boolean[] visited = new boolean[n];
-        Queue<Integer> q = new LinkedList<>();
-        for (int i=0; i<n; i++) {
-            if (!visited[i]) {
-                for (int j=0; j<node[i].length; j++) {
-                    q.offer(node[i][j]);
-                    visited[node[i][j]] = true;
+        return answer;
+    }
+    
+    public void bfs(int n, int startX, boolean[][] visited, int[][] computers) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(startX);
+        while (!queue.isEmpty()) {
+            int curX = queue.poll();
+            for (int i=0; i<n; i++) {
+                if (!visited[curX][i] && computers[curX][i] == 1) {
+                    visited[i][curX] = true;
+                    visited[curX][i] = true;
+                    queue.add(i);
                 }
-                while (!q.isEmpty()) {
-                    int nd = q.poll();
-                    for (int j=0; j<node[nd].length; j++) {
-                        if (!visited[node[nd][j]]) {
-                            q.offer(node[nd][j]);
-                            visited[node[nd][j]] = true;
-                        }
-                    }
-                }
-                count++;
             }
         }
-        return count;
     }
 }
