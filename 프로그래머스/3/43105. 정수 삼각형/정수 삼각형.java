@@ -1,20 +1,28 @@
-import java.util.Arrays;
-
 class Solution {
+    public static int[][] dp;
+    
     public int solution(int[][] triangle) {
-        int[][] dp = new int[triangle.length][];
-        for (int i=0; i<triangle.length; i++) {
-            dp[i] = new int[i+1];
+        int n = triangle.length;
+        dp = new int[n][triangle[n-1].length];
+        for (int i=0; i<n; i++) {
+            for (int j=0; j<triangle[i].length; j++) {
+                dp[i][j] = -1;
+            }
         }
-        for (int i=triangle.length-1; i>0; i--) {
-            for (int j=0; j<=i; j++) {
-                dp[i][j] += triangle[i][j];
-            }
-            for (int j=0; j<i; j++) {
-                dp[i-1][j] = Math.max(dp[i][j], dp[i][j+1]);
-            }
+        return recursion(triangle, 0, 0);
+    }
+    
+    public int recursion(int[][] triangle, int row, int col) {
+        if (dp[row][col] >= 0) {
+            return dp[row][col];
+        }
+        if (row == triangle.length - 1) {
+            dp[row][col] = triangle[row][col];
+            return triangle[row][col];
         }
         
-        return dp[0][0] + triangle[0][0];
+        dp[row][col] = triangle[row][col] + Math.max(recursion(triangle, row+1, col), recursion(triangle, row+1, col+1));
+        
+        return dp[row][col];
     }
 }
