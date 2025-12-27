@@ -1,40 +1,40 @@
 class Solution {
-    public int answer = 100;
+    public static int count;
+    
     public int solution(String begin, String target, String[] words) {
-        dfs(begin, target, words, new boolean[words.length], 0);
-        if (answer == 100) {
-            return 0;
-        }
-        return answer;
+        count = 0;
+        boolean[] visited = new boolean[words.length];
+        dfs(begin, target, words, visited, 0);
+        return count;
     }
     
-    public void dfs(String begin, String target, String[] words, boolean[] visited, int count) {
+    public void dfs(String begin, String target, String[] words, boolean[] visited, int depth) {
         if (begin.equals(target)) {
-            if (count < answer) {
-                answer = count;
+            if (count == 0 | depth < count) {
+                count = depth;
+                return;
             }
-            return;
         }
         for (int i=0; i<words.length; i++) {
-            if (!visited[i]) {
-                int idx = -1;
-                boolean check = false;
-                for (int ix=0; ix<words[i].length(); ix++) {
-                    if (begin.charAt(ix) != words[i].charAt(ix)) {
-                        if (idx != -1) {
-                            check = true;
-                            break;
-                        }
-                        idx = ix;
-                    }
-                }
-                if (idx != -1 && !check) {
-                    visited[i] = true;
-                    dfs(words[i], target, words, visited, count+1);
-                    visited[i] = false;
-                }
+            if (!visited[i] && canChange(begin, words[i])) {
+                visited[i] = true;
+                // System.out.println(words[i]);
+                dfs(words[i], target, words, visited, depth+1);
+                visited[i] = false;
             }
         }
     }
-        
+    
+    public boolean canChange(String begin, String str) {
+        int diff = 0;
+        for (int i=0; i<begin.length(); i++) {
+            if (begin.charAt(i) != str.charAt(i)) {
+                diff++;
+            }
+        }
+        if (diff == 1) {
+            return true;
+        }
+        return false;
+    }
 }
