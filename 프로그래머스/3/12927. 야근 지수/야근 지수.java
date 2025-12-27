@@ -1,27 +1,24 @@
-import java.util.PriorityQueue;
-import java.util.Collections;
+import java.util.*;
 
 class Solution {
     public long solution(int n, int[] works) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> queue = new PriorityQueue<>(Collections.reverseOrder());
         for (int i=0; i<works.length; i++) {
-            pq.offer(works[i]);
+            queue.offer(works[i]);
         }
-        for (int i=0; i<n; i++) {
-            int work = pq.poll();
-            if (work == 0) {
-                break;
+        while (n > 0 && !queue.isEmpty()) {
+            int work = queue.poll();
+            work--;
+            if (work > 0) {
+                queue.offer(work);
             }
-            pq.offer(--work);
+            n--;
         }
-        long answer = 0;
-        while (!pq.isEmpty()) {
-            int work = pq.poll();
-            if (work == 0) {
-                continue;
-            }
-            answer += (long) Math.pow(work, 2);
+        long result = 0;
+        while (!queue.isEmpty()) {
+            int work = queue.poll();
+            result += (work * work);
         }
-        return answer;
+        return result;
     }
 }
