@@ -1,34 +1,43 @@
+import java.util.*;
+
 class Solution {
-    public static int count;
+    public static class Word {
+        public String str;
+        public int count;
+        
+        public Word(String str, int count) {
+            this.str = str;
+            this.count = count;
+        }
+    }
     
     public int solution(String begin, String target, String[] words) {
-        count = 0;
+        return bfs(begin, target, words);
+    }
+    
+    public int bfs(String begin, String target, String[] words) {
+        Queue<Word> queue = new ArrayDeque<>();
         boolean[] visited = new boolean[words.length];
-        dfs(begin, target, words, visited, 0);
-        return count;
-    }
-    
-    public void dfs(String begin, String target, String[] words, boolean[] visited, int depth) {
-        if (begin.equals(target)) {
-            if (count == 0 | depth < count) {
-                count = depth;
-                return;
+        queue.offer(new Word(begin, 0));
+        while (!queue.isEmpty()) {
+            Word word = queue.poll();
+            if (word.str.equals(target)) {
+                return word.count;
+            }
+            for (int i=0; i<words.length; i++) {
+                if (!visited[i] && canChange(word.str, words[i])) {
+                    visited[i] = true;
+                    queue.offer(new Word(words[i], word.count+1));
+                }
             }
         }
-        for (int i=0; i<words.length; i++) {
-            if (!visited[i] && canChange(begin, words[i])) {
-                visited[i] = true;
-                // System.out.println(words[i]);
-                dfs(words[i], target, words, visited, depth+1);
-                visited[i] = false;
-            }
-        }
+        return 0;
     }
     
-    public boolean canChange(String begin, String str) {
+    public boolean canChange(String before, String after) {
         int diff = 0;
-        for (int i=0; i<begin.length(); i++) {
-            if (begin.charAt(i) != str.charAt(i)) {
+        for (int i=0; i<before.length(); i++) {
+            if (before.charAt(i) != after.charAt(i)) {
                 diff++;
             }
         }
