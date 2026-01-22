@@ -1,18 +1,18 @@
 class Solution {
     public int[] solution(int n, int s) {
-        int quo = s / n;
-        int rem = s % n;
-        if (quo == 0) {
+        int q = s/n;
+        int rem = s%n;
+        int[] answer = new int[n];
+        for (int i=0; i<n; i++) {
+            answer[i] = q;
+        }
+        for (int i=0; i<rem; i++) {
+            answer[n-i-1]++;
+        }
+        
+        if (q == 0) {
             return new int[]{-1};
         }
-        int[] arr = new int[n];
-        for (int i=arr.length-1; i>=0; i--) {
-            arr[i] = quo;
-            if (rem > 0) {
-                arr[i] += 1;
-                rem--;
-            }
-        }
-        return arr;
+        return answer;
     }
 }
