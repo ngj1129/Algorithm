@@ -1,68 +1,52 @@
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        HashMap<String, Integer> g_ix = new HashMap<>();
-        HashMap<String, Integer> g_sum = new HashMap<>();
-        HashMap<Integer, ArrayList<int[]>> ix_play = new HashMap<>();
-        ArrayList<int[]> list = new ArrayList<>();
-        int ix = -1;
-        int count = 0;
-        int k = 0;
+        Map<String, Integer> genToPlays = new HashMap<>();
+        Map<Integer, String> playsToGen = new TreeMap<>(Comparator.reverseOrder());
+        Map<String, List<List<Integer>>> genToEachPlay = new HashMap<>();
+        
         for (int i=0; i<genres.length; i++) {
-            if (g_ix.containsKey(genres[i])) {
-                count = g_sum.get(genres[i]);
-                k = g_ix.get(genres[i]);
-                list = ix_play.get(k);
+            String g = genres[i];
+            int p = plays[i];
+            
+            if (!genToPlays.containsKey(g)) {
+                genToPlays.put(g, 0);
+                genToEachPlay.put(g, new ArrayList<>());
             }
-            else {
-                ix++;
-                g_ix.put(genres[i], ix);
-                k = ix;
-                count = 0;
-                list = new ArrayList<>();
-            }
-            count += plays[i];
-            g_sum.put(genres[i], count);
-            list.add(new int[]{i, plays[i]});
-            ix_play.put(k, list);
+            
+            int value = genToPlays.get(g);
+            value += p;
+            genToPlays.put(g, value);
+            
+            List<List<Integer>> list = genToEachPlay.get(g);
+            list.add(List.of(i, p));
         }
-        int n = g_ix.size();
-        int[][] sum_arr = new int[n][2];
-        ix = 0;
-        for (String key: g_ix.keySet()) {
-            sum_arr[ix][0] = g_ix.get(key);
-            sum_arr[ix][1] = g_sum.get(key);
-            ix++;
+        // System.out.println(genToEachPlay);
+        
+        for (String key: genToPlays.keySet()) {
+            playsToGen.put(genToPlays.get(key), key);
         }
-        Arrays.sort(sum_arr, new Comparator<int[]>() {
-            @Override
-            public int compare(int[] a1, int[] a2) {
-                return Integer.compare(a2[1], a1[1]);
+        
+        List<Integer> answerList = new ArrayList<>();
+        for (Integer key: playsToGen.keySet()) {
+            String g = playsToGen.get(key);
+            List<List<Integer>> list = genToEachPlay.get(g);
+            list.sort(
+                Comparator.<List<Integer>>comparingInt(a -> a.get(1)).reversed()
+                .thenComparingInt(a -> a.get(0))
+            );
+            answerList.add(list.get(0).get(0));
+            if (list.size() == 1) {
+                continue;
             }
-        });
-        ArrayList<Integer> answer = new ArrayList<>();
-        for (int i=0; i<n; i++) {
-            ix = sum_arr[i][0];
-            list = ix_play.get(ix);
-            int[][] arr = new int[list.size()][2];
-            for (int j=0; j<list.size(); j++) {
-                arr[j][0] = list.get(j)[0];
-                arr[j][1] = list.get(j)[1];
-            }
-            Arrays.sort(arr, Comparator.comparingInt((int[] a) -> a[1]).reversed());
-            answer.add(arr[0][0]);
-            if (arr.length > 1) {
-                answer.add(arr[1][0]);
-            }
+            answerList.add(list.get(1).get(0));
         }
-        int[] as = new int[answer.size()];
-        for (int i=0; i<answer.size(); i++) {
-            as[i] = answer.get(i);
+        
+        int[] answer = new int[answerList.size()];
+        for (int i=0; i<answer.length; i++) {
+            answer[i] = answerList.get(i);
         }
-        return as;
+        return answer;
     }
 }
